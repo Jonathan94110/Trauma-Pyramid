@@ -26,15 +26,131 @@ document.addEventListener('DOMContentLoaded', () => {
     const resetBtn = document.getElementById('reset-btn');
     const submitBtn = document.getElementById('submit-btn');
     const backBtn = document.getElementById('back-btn');
+    const fullscreenBtn = document.getElementById('fullscreen-btn');
+    const fsLabel = document.getElementById('fs-label');
     const analyticsOverlay = document.getElementById('analytics-overlay');
 
     let draggingItem = null;
     let itemIdCounter = 0;
 
-    // Initialize list
-    initialCompanies.forEach(company => {
-        createDraggableItem(company, unassignedList);
-    });
+    // ──────────────────────────────────────
+    // SOUND EFFECTS (Web Audio API)
+    // ──────────────────────────────────────
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+    function playTierSound(tierNum) {
+        // Resume context if suspended (browser autoplay policy)
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+
+        const now = audioCtx.currentTime;
+
+        switch (tierNum) {
+            case 1: // Pure Agony — dramatic alarm
+                playTone(150, 'sawtooth', 0.3, 0.25, now);
+                playTone(100, 'sawtooth', 0.3, 0.25, now + 0.12);
+                playTone(80, 'square', 0.2, 0.3, now + 0.24);
+                break;
+            case 2: // Aggravating — warning buzz
+                playTone(200, 'square', 0.2, 0.15, now);
+                playTone(180, 'square', 0.2, 0.15, now + 0.1);
+                break;
+            case 3: // Manageable — neutral blip
+                playTone(400, 'sine', 0.15, 0.12, now);
+                playTone(350, 'sine', 0.1, 0.1, now + 0.08);
+                break;
+            case 4: // Standard Issue — simple click
+                playTone(600, 'sine', 0.1, 0.06, now);
+                break;
+            case 5: // Palate Cleansers — pleasant chime
+                playTone(523, 'sine', 0.15, 0.15, now);
+                playTone(659, 'sine', 0.15, 0.15, now + 0.1);
+                playTone(784, 'sine', 0.12, 0.2, now + 0.2);
+                break;
+            case 6: // Not Worth Talking About — muted thud
+                playTone(120, 'sine', 0.08, 0.1, now);
+                break;
+            default: // Unranked panel — soft click
+                playTone(500, 'sine', 0.05, 0.05, now);
+        }
+    }
+
+    function playTone(freq, type, volume, duration, startTime) {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = type;
+        osc.frequency.setValueAtTime(freq, startTime);
+        gain.gain.setValueAtTime(volume, startTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, startTime + duration);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start(startTime);
+        osc.stop(startTime + duration + 0.05);
+    }
+
+    // ──────────────────────────────────────
+    // LOCALSTORAGE PERSISTENCE
+    // ──────────────────────────────────────
+    const STORAGE_KEY = 'traumaPyramid_state';
+
+    function saveState() {
+        const state = { tiers: {}, unranked: [], custom: [] };
+
+        // Save tier placements
+        for (let t = 1; t <= 6; t++) {
+            const zone = document.querySelector(`.tier-${t} .tier-dropzone`);
+            state.tiers[t] = Array.from(zone.querySelectorAll('.draggable-item')).map(el => el.textContent);
+        }
+
+        // Save unranked items
+        state.unranked = Array.from(unassignedList.querySelectorAll('.draggable-item')).map(el => el.textContent);
+
+        // Track custom-added companies (not in the initial list)
+        const allItems = [...Object.values(state.tiers).flat(), ...state.unranked];
+        state.custom = allItems.filter(name => !initialCompanies.includes(name));
+
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    }
+
+    function loadState() {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return false;
+
+        try {
+            const state = JSON.parse(raw);
+            if (!state.tiers || !state.unranked) return false;
+
+            // Clear default items
+            unassignedList.innerHTML = '';
+
+            // Restore unranked
+            state.unranked.forEach(name => createDraggableItem(name, unassignedList));
+
+            // Restore tiers
+            for (let t = 1; t <= 6; t++) {
+                const zone = document.querySelector(`.tier-${t} .tier-dropzone`);
+                (state.tiers[t] || []).forEach(name => createDraggableItem(name, zone));
+            }
+
+            updatePercentages();
+            return true;
+        } catch (e) {
+            return false;
+        }
+    }
+
+    function clearState() {
+        localStorage.removeItem(STORAGE_KEY);
+    }
+
+    // ──────────────────────────────────────
+    // INITIALIZATION
+    // ──────────────────────────────────────
+    const loaded = loadState();
+    if (!loaded) {
+        initialCompanies.forEach(company => {
+            createDraggableItem(company, unassignedList);
+        });
+    }
 
     // Create a new draggable item
     function createDraggableItem(text, container) {
@@ -68,6 +184,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 setTimeout(() => {
                     item.remove();
                     updatePercentages();
+                    saveState();
                 }, 200);
             }
         });
@@ -93,6 +210,16 @@ document.addEventListener('DOMContentLoaded', () => {
             if (draggingItem) {
                 zone.appendChild(draggingItem);
                 updatePercentages();
+                saveState();
+
+                // Play sound based on which tier it was dropped into
+                const tier = zone.closest('.tier');
+                if (tier) {
+                    const tierNum = parseInt(tier.dataset.tier);
+                    playTierSound(tierNum);
+                } else {
+                    playTierSound(0); // unranked panel
+                }
             }
         });
     });
@@ -130,13 +257,33 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // ──────────────────────────────────────
-    // RESET — move everything back to unranked
+    // RESET
     // ──────────────────────────────────────
     resetBtn.addEventListener('click', () => {
         document.querySelectorAll('.tier-dropzone .draggable-item').forEach(item => {
             unassignedList.appendChild(item);
         });
         updatePercentages();
+        clearState();
+    });
+
+    // ──────────────────────────────────────
+    // FULLSCREEN
+    // ──────────────────────────────────────
+    fullscreenBtn.addEventListener('click', () => {
+        if (!document.fullscreenElement) {
+            document.documentElement.requestFullscreen().catch(() => {});
+        } else {
+            document.exitFullscreen().catch(() => {});
+        }
+    });
+
+    document.addEventListener('fullscreenchange', () => {
+        if (document.fullscreenElement) {
+            fsLabel.textContent = 'EXIT FS';
+        } else {
+            fsLabel.textContent = 'FULLSCREEN';
+        }
     });
 
     // ──────────────────────────────────────
@@ -281,6 +428,7 @@ document.addEventListener('DOMContentLoaded', () => {
             createDraggableItem(value, unassignedList);
             inputField.value = '';
             inputField.focus();
+            saveState();
         }
     }
 

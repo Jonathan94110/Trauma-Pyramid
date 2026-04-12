@@ -455,6 +455,15 @@ body {
     box-shadow: 0 0 20px var(--neon-purple-dim);
 }
 
+.fullscreen-btn {
+    border-color: var(--tier-4-color);
+}
+
+.fullscreen-btn:hover {
+    border-color: var(--tier-4-color);
+    box-shadow: 0 0 15px rgba(38, 208, 255, 0.3);
+}
+
 /* Analytics Overlay */
 .analytics-overlay {
     display: none;
