@@ -52,7 +52,10 @@ document.addEventListener('DOMContentLoaded', () => {
             if (parent.id === 'unassigned-list') {
                 item.style.transform = 'scale(0)';
                 item.style.opacity = '0';
-                setTimeout(() => item.remove(), 200);
+                setTimeout(() => {
+                    item.remove();
+                    updatePercentages();
+                }, 200);
             }
         });
 
@@ -76,6 +79,7 @@ document.addEventListener('DOMContentLoaded', () => {
             zonaHoverStyle(zone, false);
             if (draggingItem) {
                 zone.appendChild(draggingItem);
+                updatePercentages();
             }
         });
     });
@@ -86,6 +90,30 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             zone.classList.remove('drag-over');
         }
+    }
+
+    // Update tier percentages based on ranked items
+    function updatePercentages() {
+        const tierDropzones = document.querySelectorAll('.tier-dropzone');
+        let totalRanked = 0;
+        tierDropzones.forEach(zone => {
+            totalRanked += zone.querySelectorAll('.draggable-item').length;
+        });
+
+        document.querySelectorAll('.tier').forEach(tier => {
+            const zone = tier.querySelector('.tier-dropzone');
+            const percentEl = tier.querySelector('.tier-percent');
+            const count = zone.querySelectorAll('.draggable-item').length;
+
+            if (totalRanked === 0) {
+                percentEl.textContent = '0%';
+                percentEl.classList.remove('active');
+            } else {
+                const pct = Math.round((count / totalRanked) * 100);
+                percentEl.textContent = pct + '%';
+                percentEl.classList.toggle('active', pct > 0);
+            }
+        });
     }
 
     // Add entirely new company

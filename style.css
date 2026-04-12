@@ -243,6 +243,27 @@ body {
     min-height: 100px;
 }
 
+.tier-percent {
+    width: 65px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1rem;
+    color: var(--text-muted);
+    border-left: 1px solid rgba(255,255,255,0.05);
+    background: rgba(0,0,0,0.2);
+    border-radius: 0 12px 12px 0;
+    transition: color 0.3s, text-shadow 0.3s;
+}
+
+.tier-percent.active {
+    color: var(--text-main);
+    text-shadow: 0 0 8px var(--neon-purple-dim);
+}
+
 .tier-dropzone.drag-over {
     background: rgba(176, 38, 255, 0.1);
 }
