@@ -32,38 +32,42 @@
                     <h2 class="app-supertitle">TF MARAUDERS</h2>
                     <h1 class="app-title">TRAUMA<span class="highlight">PYRAMID</span></h1>
                     <p class="subtitle">Rank toys and third-party companies from Pure Agony to Not Worth Talking About.</p>
+                    <div class="header-actions">
+                        <button id="reset-btn" class="action-btn reset-btn">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"></polyline><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path></svg>
+                            RESET
+                        </button>
+                        <button id="submit-btn" class="action-btn submit-btn">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"></path><path d="M22 12A10 10 0 0 0 12 2v10z"></path></svg>
+                            SUBMIT &amp; ANALYZE
+                        </button>
+                    </div>
                 </header>
                 
                 <div class="pyramid">
                     <div class="tier tier-1" data-tier="1">
-                        <div class="tier-label"><span>PURE AGONY</span></div>
+                        <div class="tier-label"><span>PURE AGONY</span><span class="tier-percent">0%</span></div>
                         <div class="tier-dropzone"></div>
-                        <div class="tier-percent">0%</div>
                     </div>
                     <div class="tier tier-2" data-tier="2">
-                        <div class="tier-label"><span>AGGRAVATING</span></div>
+                        <div class="tier-label"><span>AGGRAVATING</span><span class="tier-percent">0%</span></div>
                         <div class="tier-dropzone"></div>
-                        <div class="tier-percent">0%</div>
                     </div>
                     <div class="tier tier-3" data-tier="3">
-                        <div class="tier-label"><span>MANAGEABLE</span></div>
+                        <div class="tier-label"><span>MANAGEABLE</span><span class="tier-percent">0%</span></div>
                         <div class="tier-dropzone"></div>
-                        <div class="tier-percent">0%</div>
                     </div>
                     <div class="tier tier-4" data-tier="4">
-                        <div class="tier-label"><span>STANDARD ISSUE</span></div>
+                        <div class="tier-label"><span>STANDARD ISSUE</span><span class="tier-percent">0%</span></div>
                         <div class="tier-dropzone"></div>
-                        <div class="tier-percent">0%</div>
                     </div>
                     <div class="tier tier-5" data-tier="5">
-                        <div class="tier-label"><span>PALATE CLEANSERS</span></div>
+                        <div class="tier-label"><span>PALATE CLEANSERS</span><span class="tier-percent">0%</span></div>
                         <div class="tier-dropzone"></div>
-                        <div class="tier-percent">0%</div>
                     </div>
                     <div class="tier tier-6" data-tier="6">
-                        <div class="tier-label" style="font-size: 0.75rem;"><span>NOT WORTH<br>TALKING ABOUT</span></div>
+                        <div class="tier-label" style="font-size: 0.75rem;"><span>NOT WORTH<br>TALKING ABOUT</span><span class="tier-percent">0%</span></div>
                         <div class="tier-dropzone"></div>
-                        <div class="tier-percent">0%</div>
                     </div>
                 </div>
             </div>
@@ -84,6 +88,77 @@
                     </button>
                 </div>
                 <p class="helper-text">Double-click an item in the unranked list to delete it.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Analytics Dashboard (hidden by default) -->
+    <div class="analytics-overlay" id="analytics-overlay">
+        <div class="analytics-dashboard">
+            <div class="analytics-header">
+                <h1 class="analytics-title">TRAUMA<span class="highlight">ANALYTICS</span></h1>
+                <p class="analytics-subtitle">Data-Driven Breakdown</p>
+                <button id="back-btn" class="action-btn reset-btn">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+                    BACK TO PYRAMID
+                </button>
+            </div>
+
+            <div class="analytics-grid">
+                <!-- Summary Stats -->
+                <div class="analytics-card stats-card">
+                    <h3>SUMMARY</h3>
+                    <div class="stats-row">
+                        <div class="stat-box">
+                            <span class="stat-value" id="stat-total">0</span>
+                            <span class="stat-label">Ranked</span>
+                        </div>
+                        <div class="stat-box">
+                            <span class="stat-value" id="stat-unranked">0</span>
+                            <span class="stat-label">Unranked</span>
+                        </div>
+                        <div class="stat-box">
+                            <span class="stat-value" id="stat-avg-score">0</span>
+                            <span class="stat-label">Avg Score</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tier Distribution -->
+                <div class="analytics-card">
+                    <h3>TIER DISTRIBUTION</h3>
+                    <div id="tier-distribution-chart" class="chart-container"></div>
+                </div>
+
+                <!-- Trauma Score Ranking -->
+                <div class="analytics-card full-width">
+                    <h3>TRAUMA SCORE RANKING</h3>
+                    <p class="card-subtitle">Higher score = more trauma. Avoid these companies.</p>
+                    <div id="trauma-ranking-chart" class="ranking-container"></div>
+                </div>
+
+                <!-- Danger Zone -->
+                <div class="analytics-card danger-card">
+                    <h3>DANGER ZONE</h3>
+                    <p class="card-subtitle">Companies to stay away from (Pure Agony + Aggravating)</p>
+                    <div id="danger-list" class="tag-list"></div>
+                    <div class="empty-state" id="danger-empty">No companies ranked here yet.</div>
+                </div>
+
+                <!-- Safe Buys -->
+                <div class="analytics-card safe-card">
+                    <h3>SAFE BUYS</h3>
+                    <p class="card-subtitle">Best ROI — least trauma (Palate Cleansers + Not Worth Talking About)</p>
+                    <div id="safe-list" class="tag-list"></div>
+                    <div class="empty-state" id="safe-empty">No companies ranked here yet.</div>
+                </div>
+
+                <!-- ROI Breakdown -->
+                <div class="analytics-card full-width">
+                    <h3>TRAUMA vs ROI VERDICT</h3>
+                    <p class="card-subtitle">Quick verdict on every ranked company</p>
+                    <div id="verdict-table" class="verdict-container"></div>
+                </div>
             </div>
         </div>
     </div>
