@@ -465,6 +465,26 @@ body {
     box-shadow: 0 0 15px rgba(38, 208, 255, 0.3);
 }
 
+.mute-btn {
+    border-color: var(--tier-5-color);
+}
+
+.mute-btn:hover {
+    border-color: var(--tier-5-color);
+    box-shadow: 0 0 15px rgba(38, 255, 138, 0.3);
+}
+
+.mute-btn.muted {
+    border-color: var(--tier-1-color);
+    opacity: 0.6;
+}
+
+.mute-btn.muted:hover {
+    border-color: var(--tier-1-color);
+    box-shadow: 0 0 15px rgba(255, 38, 38, 0.3);
+    opacity: 1;
+}
+
 /* Analytics Overlay */
 .analytics-overlay {
     display: none;
