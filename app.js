@@ -34,60 +34,6 @@ document.addEventListener('DOMContentLoaded', () => {
     let itemIdCounter = 0;
 
     // ──────────────────────────────────────
-    // SOUND EFFECTS (Web Audio API)
-    // ──────────────────────────────────────
-    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-
-    function playTierSound(tierNum) {
-        // Resume context if suspended (browser autoplay policy)
-        if (audioCtx.state === 'suspended') audioCtx.resume();
-
-        const now = audioCtx.currentTime;
-
-        switch (tierNum) {
-            case 1: // Pure Agony — dramatic alarm
-                playTone(150, 'sawtooth', 0.3, 0.25, now);
-                playTone(100, 'sawtooth', 0.3, 0.25, now + 0.12);
-                playTone(80, 'square', 0.2, 0.3, now + 0.24);
-                break;
-            case 2: // Aggravating — warning buzz
-                playTone(200, 'square', 0.2, 0.15, now);
-                playTone(180, 'square', 0.2, 0.15, now + 0.1);
-                break;
-            case 3: // Manageable — neutral blip
-                playTone(400, 'sine', 0.15, 0.12, now);
-                playTone(350, 'sine', 0.1, 0.1, now + 0.08);
-                break;
-            case 4: // Standard Issue — simple click
-                playTone(600, 'sine', 0.1, 0.06, now);
-                break;
-            case 5: // Palate Cleansers — pleasant chime
-                playTone(523, 'sine', 0.15, 0.15, now);
-                playTone(659, 'sine', 0.15, 0.15, now + 0.1);
-                playTone(784, 'sine', 0.12, 0.2, now + 0.2);
-                break;
-            case 6: // Not Worth Talking About — muted thud
-                playTone(120, 'sine', 0.08, 0.1, now);
-                break;
-            default: // Unranked panel — soft click
-                playTone(500, 'sine', 0.05, 0.05, now);
-        }
-    }
-
-    function playTone(freq, type, volume, duration, startTime) {
-        const osc = audioCtx.createOscillator();
-        const gain = audioCtx.createGain();
-        osc.type = type;
-        osc.frequency.setValueAtTime(freq, startTime);
-        gain.gain.setValueAtTime(volume, startTime);
-        gain.gain.exponentialRampToValueAtTime(0.001, startTime + duration);
-        osc.connect(gain);
-        gain.connect(audioCtx.destination);
-        osc.start(startTime);
-        osc.stop(startTime + duration + 0.05);
-    }
-
-    // ──────────────────────────────────────
     // LOCALSTORAGE PERSISTENCE
     // ──────────────────────────────────────
     const STORAGE_KEY = 'traumaPyramid_state';
@@ -211,15 +157,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 zone.appendChild(draggingItem);
                 updatePercentages();
                 saveState();
-
-                // Play sound based on which tier it was dropped into
-                const tier = zone.closest('.tier');
-                if (tier) {
-                    const tierNum = parseInt(tier.dataset.tier);
-                    playTierSound(tierNum);
-                } else {
-                    playTierSound(0); // unranked panel
-                }
             }
         });
     });
