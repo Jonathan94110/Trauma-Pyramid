@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trauma Pyramid</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Orbitron:wght@500;700;900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="logo-bg">
+        <img src="assets/logo.png" alt="Decepticon Theme">
+        <div class="overlay-grad"></div>
+    </div>
+    
+    <div class="app-wrapper">
+        <div class="main-container">
+            <!-- Vertical Bar Guide -->
+            <div class="rank-bar-guide">
+                <div class="rank-node agony"><span class="icon">😫</span></div>
+                <div class="rank-track"></div>
+                <div class="rank-node neutral"><span class="icon">😐</span></div>
+                <div class="rank-track"></div>
+                <div class="rank-node smiley"><span class="icon">😊</span></div>
+            </div>
+
+            <!-- Pyramid -->
+            <div class="pyramid-container">
+                <header class="app-header">
+                    <h2 class="app-supertitle">TF MARAUDERS</h2>
+                    <h1 class="app-title">TRAUMA<span class="highlight">PYRAMID</span></h1>
+                    <p class="subtitle">Rank toys and third-party companies from Pure Agony to Not Worth Talking About.</p>
+                </header>
+                
+                <div class="pyramid">
+                    <div class="tier tier-1" data-tier="1">
+                        <div class="tier-label"><span>PURE AGONY</span></div>
+                        <div class="tier-dropzone"></div>
+                    </div>
+                    <div class="tier tier-2" data-tier="2">
+                        <div class="tier-label"><span>AGGRAVATING</span></div>
+                        <div class="tier-dropzone"></div>
+                    </div>
+                    <div class="tier tier-3" data-tier="3">
+                        <div class="tier-label"><span>MANAGEABLE</span></div>
+                        <div class="tier-dropzone"></div>
+                    </div>
+                    <div class="tier tier-4" data-tier="4">
+                        <div class="tier-label"><span>STANDARD ISSUE</span></div>
+                        <div class="tier-dropzone"></div>
+                    </div>
+                    <div class="tier tier-5" data-tier="5">
+                        <div class="tier-label"><span>PALATE CLEANSERS</span></div>
+                        <div class="tier-dropzone"></div>
+                    </div>
+                    <div class="tier tier-6" data-tier="6">
+                        <div class="tier-label" style="font-size: 0.75rem;"><span>NOT WORTH<br>TALKING ABOUT</span></div>
+                        <div class="tier-dropzone"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Side Panel -->
+            <div class="side-panel">
+                <div class="panel-header">
+                    <h2>UNRANKED ENTITIES</h2>
+                </div>
+                <div class="panel-dropzone" id="unassigned-list" data-tier="0">
+                    <!-- Populated by JS -->
+                </div>
+                
+                <div class="custom-input-section">
+                    <input type="text" id="new-company-input" placeholder="Add new entity..." autocomplete="off">
+                    <button id="add-company-btn">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                    </button>
+                </div>
+                <p class="helper-text">Double-click an item in the unranked list to delete it.</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
