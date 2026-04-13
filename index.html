@@ -3,36 +3,61 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Trauma Pyramid</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Trauma Pyramid - 3rd Party Transformers Tier List</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Orbitron:wght@500;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" defer></script>
 </head>
 <body>
     <div class="logo-bg">
         <img src="assets/logo.png" alt="Decepticon Theme">
         <div class="overlay-grad"></div>
     </div>
-    
+
     <div class="app-wrapper">
         <div class="main-container">
             <!-- Vertical Bar Guide -->
             <div class="rank-bar-guide">
-                <div class="rank-node agony"><span class="icon">😫</span></div>
+                <div class="rank-node agony"><span class="icon">&#x1F480;</span></div>
                 <div class="rank-track"></div>
-                <div class="rank-node neutral"><span class="icon">😐</span></div>
+                <div class="rank-node aggravate"><span class="icon">&#x1F621;</span></div>
                 <div class="rank-track"></div>
-                <div class="rank-node smiley"><span class="icon">😊</span></div>
+                <div class="rank-node neutral"><span class="icon">&#x1F615;</span></div>
+                <div class="rank-track"></div>
+                <div class="rank-node standard"><span class="icon">&#x1F610;</span></div>
+                <div class="rank-track"></div>
+                <div class="rank-node smiley"><span class="icon">&#x1F60C;</span></div>
+                <div class="rank-track"></div>
+                <div class="rank-node sleepy"><span class="icon">&#x1F4A4;</span></div>
             </div>
 
-            <!-- Pyramid -->
+            <!-- Pyramid Container -->
             <div class="pyramid-container">
                 <header class="app-header">
-                    <h2 class="app-supertitle">TF MARAUDERS</h2>
-                    <h1 class="app-title">TRAUMA<span class="highlight">PYRAMID</span></h1>
-                    <p class="subtitle">Rank toys and third-party companies from Pure Agony to Not Worth Talking About.</p>
+                    <div class="header-top-row">
+                        <div class="header-brand">
+                            <h2 class="app-supertitle">TF MARAUDERS</h2>
+                            <h1 class="app-title">TRAUMA<span class="highlight">PYRAMID</span></h1>
+                            <p class="subtitle">Rank toys and third-party companies from Pure Agony to Not Worth Talking About.</p>
+                        </div>
+                        <div class="header-controls-row">
+                            <div class="episode-control">
+                                <input type="text" id="episode-input" class="episode-input" placeholder="EP #" maxlength="10">
+                            </div>
+                            <div class="timer-control">
+                                <span id="timer-display" class="timer-display">02:00</span>
+                                <button id="timer-start-btn" class="action-btn timer-btn">START</button>
+                                <button id="timer-reset-btn" class="action-btn timer-btn">RST</button>
+                            </div>
+                        </div>
+                    </div>
                     <div class="header-actions">
+                        <button id="undo-btn" class="action-btn undo-btn" disabled title="Undo last action">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"></polyline><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path></svg>
+                            UNDO
+                        </button>
                         <button id="reset-btn" class="action-btn reset-btn">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"></polyline><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path></svg>
                             RESET
@@ -51,32 +76,57 @@
                             <span id="mute-label">SFX ON</span>
                         </button>
                     </div>
+                    <!-- Host Tabs -->
+                    <div class="host-tabs-container">
+                        <div id="host-tabs" class="host-tabs">
+                            <!-- Populated by JS -->
+                        </div>
+                        <button id="add-host-btn" class="action-btn add-host-btn" title="Add Host (max 5)">+</button>
+                    </div>
                 </header>
-                
+
                 <div class="pyramid">
                     <div class="tier tier-1" data-tier="1">
-                        <div class="tier-label"><span>PURE AGONY</span><span class="tier-percent">0%</span></div>
-                        <div class="tier-dropzone"></div>
+                        <div class="tier-label">
+                            <span class="tier-name-line">PURE AGONY <span class="tier-count" data-tier="1"></span></span>
+                            <span class="tier-percent" data-tier="1">0%</span>
+                        </div>
+                        <div class="tier-dropzone" data-tier="1"></div>
                     </div>
                     <div class="tier tier-2" data-tier="2">
-                        <div class="tier-label"><span>AGGRAVATING</span><span class="tier-percent">0%</span></div>
-                        <div class="tier-dropzone"></div>
+                        <div class="tier-label">
+                            <span class="tier-name-line">AGGRAVATING <span class="tier-count" data-tier="2"></span></span>
+                            <span class="tier-percent" data-tier="2">0%</span>
+                        </div>
+                        <div class="tier-dropzone" data-tier="2"></div>
                     </div>
                     <div class="tier tier-3" data-tier="3">
-                        <div class="tier-label"><span>MANAGEABLE</span><span class="tier-percent">0%</span></div>
-                        <div class="tier-dropzone"></div>
+                        <div class="tier-label">
+                            <span class="tier-name-line">MANAGEABLE <span class="tier-count" data-tier="3"></span></span>
+                            <span class="tier-percent" data-tier="3">0%</span>
+                        </div>
+                        <div class="tier-dropzone" data-tier="3"></div>
                     </div>
                     <div class="tier tier-4" data-tier="4">
-                        <div class="tier-label"><span>STANDARD ISSUE</span><span class="tier-percent">0%</span></div>
-                        <div class="tier-dropzone"></div>
+                        <div class="tier-label">
+                            <span class="tier-name-line">STANDARD ISSUE <span class="tier-count" data-tier="4"></span></span>
+                            <span class="tier-percent" data-tier="4">0%</span>
+                        </div>
+                        <div class="tier-dropzone" data-tier="4"></div>
                     </div>
                     <div class="tier tier-5" data-tier="5">
-                        <div class="tier-label"><span>PALATE CLEANSERS</span><span class="tier-percent">0%</span></div>
-                        <div class="tier-dropzone"></div>
+                        <div class="tier-label">
+                            <span class="tier-name-line">PALATE CLEANSERS <span class="tier-count" data-tier="5"></span></span>
+                            <span class="tier-percent" data-tier="5">0%</span>
+                        </div>
+                        <div class="tier-dropzone" data-tier="5"></div>
                     </div>
                     <div class="tier tier-6" data-tier="6">
-                        <div class="tier-label" style="font-size: 0.75rem;"><span>NOT WORTH<br>TALKING ABOUT</span><span class="tier-percent">0%</span></div>
-                        <div class="tier-dropzone"></div>
+                        <div class="tier-label" style="font-size: 0.75rem;">
+                            <span class="tier-name-line">NOT WORTH<br>TALKING ABOUT <span class="tier-count" data-tier="6"></span></span>
+                            <span class="tier-percent" data-tier="6">0%</span>
+                        </div>
+                        <div class="tier-dropzone" data-tier="6"></div>
                     </div>
                 </div>
             </div>
@@ -86,10 +136,14 @@
                 <div class="panel-header">
                     <h2>UNRANKED ENTITIES</h2>
                 </div>
+                <div class="search-container">
+                    <input type="text" id="search-input" class="search-input" placeholder="Search companies...">
+                    <button id="search-clear" class="search-clear" title="Clear search">&times;</button>
+                </div>
                 <div class="panel-dropzone" id="unassigned-list" data-tier="0">
                     <!-- Populated by JS -->
                 </div>
-                
+
                 <div class="custom-input-section">
                     <input type="text" id="new-company-input" placeholder="Add new entity..." autocomplete="off">
                     <button id="add-company-btn">
@@ -103,14 +157,20 @@
 
     <!-- Analytics Dashboard (hidden by default) -->
     <div class="analytics-overlay" id="analytics-overlay">
-        <div class="analytics-dashboard">
+        <div class="analytics-dashboard" id="analytics-dashboard">
             <div class="analytics-header">
                 <h1 class="analytics-title">TRAUMA<span class="highlight">ANALYTICS</span></h1>
                 <p class="analytics-subtitle">Data-Driven Breakdown</p>
-                <button id="back-btn" class="action-btn reset-btn">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
-                    BACK TO PYRAMID
-                </button>
+                <div class="analytics-actions">
+                    <button id="screenshot-btn" class="action-btn analytics-action-btn">SCREENSHOT</button>
+                    <button id="csv-export-btn" class="action-btn analytics-action-btn">CSV EXPORT</button>
+                    <button id="share-btn" class="action-btn analytics-action-btn">SHARE</button>
+                    <button id="save-episode-btn" class="action-btn analytics-action-btn">SAVE EPISODE</button>
+                    <button id="back-btn" class="action-btn reset-btn">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+                        BACK TO PYRAMID
+                    </button>
+                </div>
             </div>
 
             <div class="analytics-grid">
@@ -157,16 +217,58 @@
                 <!-- Safe Buys -->
                 <div class="analytics-card safe-card">
                     <h3>SAFE BUYS</h3>
-                    <p class="card-subtitle">Best ROI — least trauma (Standard Issue + Palate Cleansers + Not Worth Talking About)</p>
+                    <p class="card-subtitle">Best ROI (Standard Issue + Palate Cleansers + Not Worth Talking About)</p>
                     <div id="safe-list" class="tag-list"></div>
                     <div class="empty-state" id="safe-empty">No companies ranked here yet.</div>
                 </div>
 
-                <!-- ROI Breakdown -->
+                <!-- Category Breakdown -->
+                <div class="analytics-card full-width">
+                    <h3>CATEGORY BREAKDOWN</h3>
+                    <p class="card-subtitle">Distribution by company category tag</p>
+                    <div id="category-breakdown" class="category-breakdown-grid"></div>
+                </div>
+
+                <!-- Verdict Table -->
                 <div class="analytics-card full-width">
                     <h3>TRAUMA vs ROI VERDICT</h3>
                     <p class="card-subtitle">Quick verdict on every ranked company</p>
                     <div id="verdict-table" class="verdict-container"></div>
+                </div>
+
+                <!-- Head to Head Comparison -->
+                <div class="analytics-card full-width">
+                    <h3>HEAD TO HEAD</h3>
+                    <p class="card-subtitle">Compare two companies side-by-side</p>
+                    <div class="h2h-controls">
+                        <select id="h2h-select-1" class="h2h-select"><option value="">Select Company 1</option></select>
+                        <span class="h2h-vs">VS</span>
+                        <select id="h2h-select-2" class="h2h-select"><option value="">Select Company 2</option></select>
+                    </div>
+                    <div id="h2h-result" class="h2h-result"></div>
+                </div>
+
+                <!-- Most Controversial (multi-host) -->
+                <div class="analytics-card full-width" id="controversial-card" style="display:none;">
+                    <h3>MOST CONTROVERSIAL</h3>
+                    <p class="card-subtitle">Companies where hosts disagree the most</p>
+                    <div id="controversial-list" class="controversial-list"></div>
+                </div>
+
+                <!-- Biggest Movers -->
+                <div class="analytics-card full-width" id="movers-card">
+                    <h3>BIGGEST MOVERS</h3>
+                    <p class="card-subtitle">Companies that changed tiers since last saved episode</p>
+                    <div id="movers-list" class="movers-list"></div>
+                    <div class="empty-state" id="movers-empty">No previous episode to compare against.</div>
+                </div>
+
+                <!-- Episode History -->
+                <div class="analytics-card full-width">
+                    <h3>EPISODE HISTORY</h3>
+                    <p class="card-subtitle">Past saved episode snapshots</p>
+                    <div id="episode-history-list" class="episode-history-list"></div>
+                    <div class="empty-state" id="history-empty">No episodes saved yet.</div>
                 </div>
             </div>
         </div>
