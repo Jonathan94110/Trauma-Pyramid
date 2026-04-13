@@ -302,8 +302,18 @@ document.addEventListener('DOMContentLoaded', () => {
             tiers[cfg.tier] = items;
             totalRanked += items.length;
 
-            items.forEach(name => {
-                allRanked.push({ name, tier: cfg.tier, score: cfg.score, color: cfg.color, verdict: cfg.verdict, verdictClass: cfg.verdictClass });
+            // Position-based scoring: first item in tier = highest score within that tier
+            const count = items.length;
+            items.forEach((name, idx) => {
+                let positionScore;
+                if (count <= 1) {
+                    positionScore = cfg.score;
+                } else {
+                    // Spread items across a 1.8-point range within the tier
+                    positionScore = cfg.score + (1.8 * (count - 1 - idx) / (count - 1)) - 0.9;
+                }
+                positionScore = Math.round(positionScore * 10) / 10;
+                allRanked.push({ name, tier: cfg.tier, score: positionScore, baseScore: cfg.score, color: cfg.color, verdict: cfg.verdict, verdictClass: cfg.verdictClass });
             });
         });
 
@@ -311,7 +321,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const avgScore = totalRanked > 0 ? (allRanked.reduce((sum, r) => sum + r.score, 0) / totalRanked).toFixed(1) : 0;
 
         // Sort by score descending (most traumatic first)
-        allRanked.sort((a, b) => b.score - a.score || a.name.localeCompare(b.name));
+        allRanked.sort((a, b) => b.score - a.score);
 
         return { tiers, totalRanked, unrankedCount, avgScore, allRanked };
     }
@@ -344,9 +354,9 @@ document.addEventListener('DOMContentLoaded', () => {
         // Trauma score ranking
         const rankChart = document.getElementById('trauma-ranking-chart');
         rankChart.innerHTML = '';
-        const maxScore = 10;
+        const maxScore = data.allRanked.length > 0 ? data.allRanked[0].score : 10;
         data.allRanked.forEach((item, i) => {
-            const pct = (item.score / maxScore) * 100;
+            const pct = maxScore > 0 ? (item.score / maxScore) * 100 : 0;
             const row = document.createElement('div');
             row.className = 'rank-row';
             row.innerHTML = `
@@ -377,11 +387,11 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
 
-        // Safe buys (tier 5 + 6)
+        // Safe buys (tier 4 + 5 + 6)
         const safeList = document.getElementById('safe-list');
         const safeEmpty = document.getElementById('safe-empty');
         safeList.innerHTML = '';
-        const safeItems = data.allRanked.filter(r => r.tier >= 5);
+        const safeItems = data.allRanked.filter(r => r.tier >= 4);
         if (safeItems.length === 0) {
             safeEmpty.classList.add('visible');
         } else {
